@@ -13,7 +13,7 @@ LIBFT = libft.a
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) $<  -o $@
+	$(CC) $(CFLAGS) -lreadline $<  -o $@
 
 $(LIBFT): coreutils/libft.h
 	make -C coreutils all
