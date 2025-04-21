@@ -6,7 +6,7 @@
 /*   By: yrhandou <yrhandou@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/13 12:34:48 by yrhandou          #+#    #+#             */
-/*   Updated: 2025/04/21 15:12:51 by yrhandou         ###   ########.fr       */
+/*   Updated: 2025/04/21 19:39:13 by yrhandou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ size_t token_counter(char *s)
 // 		i++;
 // 	}
 // 	i++;
-// 	token_count++;
+// 	token_count++; 
 // 	if (str[i] == '-')
 // 	{
 // 		while (ft_isalpha(str[i]))
