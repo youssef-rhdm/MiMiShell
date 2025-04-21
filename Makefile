@@ -1,30 +1,39 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = # -Wall -Wextra -Werror
 
-SRC = main.c
+MIMI_SRC = main.c
 
-OBJ = $(SRC:.c=.o)
+MIMI_OBJ = $(MIMI_SRC:.c=.o)
 
 NAME = minishell
 
 LIBFT = libft.a
 
+LIBFT_SRC = $(wildcard $(LIBFT_DIR)/*.c)
+
+LIBFT_OBJ = $(wildcard $(LIBFT_DIR)/*.o)
+
+LIBFT_DIR = coreutils
+
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) -lreadline $<  -o $@
+$(NAME): $(MIMI_OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(MIMI_OBJ)  -o $@ -lreadline $(LIBFT)
 
-$(LIBFT): coreutils/libft.h
+$(LIBFT): $(LIBFT_SRC)
 	make -C coreutils all
-	mv coreutils/libft.a .7747
-*.o: *.c minishell.h coreutils/libft.h
-	$(CC) $(CFLAGS) $< -o $@
+	mv coreutils/libft.a .
+
+%.o: %.c minishell.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(MIMI_OBJ)
+	make -C coreutils clean
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(LIBFT)
 
-re: fclean all
+re: clean all
