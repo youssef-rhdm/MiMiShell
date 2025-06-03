@@ -1,30 +1,40 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g  -Wall -Wextra -Werror
 
-SRC = main.c
+MINI_SRC = tokenization_utils.c handlers.c minishell.c misc_utils.c base_utils.c tree_utils.c
 
-OBJ = $(SRC:.c=.o)
+MINI_OBJ = $(MINI_SRC:.c=.o)
 
 NAME = minishell
 
 LIBFT = libft.a
 
+LIBFT_SRC = $(wildcard $(LIBFT_DIR)/*.c)
+
+LIBFT_OBJ = $(wildcard $(LIBFT_DIR)/*.o)
+
+LIBFT_DIR = libft
+
 all: $(NAME)
+	./$(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(CFLAGS) -lreadline $<  -o $@
+$(NAME): $(MINI_OBJ) $(LIBFT)
+	$(CC) $(CFLAGS) $(MINI_OBJ)  -o $@  $(LIBFT) -lreadline -ltermcap
 
-$(LIBFT): coreutils/libft.h
-	make -C coreutils all
-	mv coreutils/libft.a .7747
-*.o: *.c minishell.h coreutils/libft.h
-	$(CC) $(CFLAGS) $< -o $@
+$(LIBFT): $(LIBFT_SRC)
+	make -C libft all
+	mv libft/libft.a .
+
+%.o: %.c minishell.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJ)
+	$(RM) $(MINI_OBJ)
+	make -C libft clean
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(LIBFT)
 
 re: fclean all

@@ -1,0 +1,332 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_old.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrhandou <yrhandou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/04 12:09:31 by yrhandou          #+#    #+#             */
+/*   Updated: 2025/05/06 09:04:19 by yrhandou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+// size_t token_counter(char *s)
+// {
+// 	size_t i;
+// 	size_t j;
+// 	size_t counter;
+// 	char *delimiters;
+// 	int *delimiters_counter;
+// 	delimiters_counter = malloc(sizeof(int));
+// 	if (delimiters)
+// 		return 0;
+// 	char *str;
+// 	i = 0;
+// 	j = 0;
+// 	counter = 0;
+// 	str = s;
+// 	if (str[0] == ' ')
+// 		str++;
+// 	str = ft_strchr(str, ' ');
+// 	if (!str)
+// 		return 0;
+// 	while (str)
+// 	{
+// 		counter++;
+// 		str++;
+// 		str = ft_strchr(str, ' ');
+// 	}
+// 	free(delimiters);
+// 	return counter;
+// }
+// int lexer(char *str)
+// {
+// 	size_t i;
+// 	size_t j;
+// 	t_token *tokens;
+// 	size_t token_count;
+// 	token_count = 0;
+// tokens = malloc(sizeof(t_token));
+// if(!tokens)
+// 	return 0;
+// 	i = 0;
+// 	j = 0;
+// 	char **sub_tokens = ft_split(str, ' ');
+// 	if (!sub_tokens)
+// 		return 0;
+// 	while (sub_tokens[i][j])
+// 	{
+// 		while (sub_tokens[i][j])
+// 		{
+// 			if (ft_isalpha(sub_tokens[i][j]))
+// 				j++;
+// 			else if (sub_tokens[i][0] == '-')
+// 			{
+// 				if (ft_isalpha(sub_tokens[i][j]))
+// 				j++
+// 			}
+// 		}
+// 		i++;
+// 	}
+// 	i++;
+// 	token_count++;
+// 	if (str[i] == '-')
+// 	{
+// 		while (ft_isalpha(str[i]))
+// 			i++;
+// 		token_count++;
+// 	}
+// 	while (str[i])
+// 	{
+// 		i++;
+// 	}
+// 	return i;
+// }
+
+// int ft_strsquash(char *str)
+// {
+// 	int i = 0;
+// 	int s_len = 0;
+// 	;
+
+// 	while (str[i])
+// 	{
+// 		if (!ft_isspace(str[i]))
+// 		{
+// 			s_len++;
+// 			if (ft_isspace(str[i + 1]))
+// 				s_len++;
+// 		}
+// 		i++;
+// 	}
+// 	char *s = ft_calloc(s_len + 1, sizeof(char));
+// 	if (!s)
+// 		return 0;
+// 	return s_len;
+// }
+
+// char **token_slicer(char *str, int token_count)
+// {
+// 	int i = 0;
+// 	int j = 0;
+// 	char *store;
+// 	char *tmp;
+// 	char *tmp2;
+// 	int position = 0;
+// 	if (!str)
+// 		return NULL;
+// 	char **token = ft_calloc(token_count, sizeof(char *));
+// 	if (!token)
+// 		return NULL;
+// 	while (str[i])
+// 	{
+// 		if (ft_is_bonus_operator(&str[i]))
+// 		{
+// 			tmp = ft_substr(str, position, i - position);
+// 			token[j++] = ft_strtrim(tmp, " ");
+// 			position = i;
+// 			token[j++] = ft_substr(str, position, 2);
+// 			i += 2;
+// 			position = i;
+// 		}
+// 		if (ft_is_operator(str[i]))
+// 		{
+// 			tmp = ft_substr(str, position, i - position);
+// 			token[j++] = ft_strtrim(tmp, " ");
+// 			position = i;
+// 			token[j++] = ft_substr(str, position, 1);
+// 			position = i + 1;
+// 			// free(tmp);
+// 		}
+// 		if (str[i + 1] == '\0')
+// 		{
+// 			tmp2 = ft_substr(str, position, i);
+// 			token[j] = ft_strtrim(tmp2, " ");
+// 			// free(tmp2);
+// 		}
+// 		i++;
+// 	}
+// 	return token;
+// }
+
+char *ft_op_srchr(char *s)
+{
+	int i = 0;
+	char *set[4] = {"||", "&&", ">>", "<<"};
+	while (i <= 3)
+	{
+		if (ft_strnstr(s, set[i], 2))
+			return &s[i];
+		i++;
+	}
+	return NULL;
+}
+
+// char **token_slicer_v2(char *str, int token_count)
+// {
+// 	int i = 0;
+// 	int token_length = 0;
+// 	int position = 0;
+// 	char **tokens = ft_calloc(token_count, sizeof(char *));
+// 	if (!tokens)
+// 		return NULL;
+// 	while (str[i])
+// 	{
+// 		token_length = 0;
+// 		while (str[i] != '\0' && !ft_is_operator(str[i]))
+// 		{
+// 			token_length++;
+// 			i++;
+// 		}
+// 		tokens[position++] = ft_substr(str, i - token_length, token_length);
+// 		tokens[position++] = ft_substr(str, i, ft_is_operator(str[i]));
+// 		token_count -= 2;
+// 		if (!str[i] || token_count == 0)
+// 			break;
+// 		i++;
+// 	}
+// 	return tokens;
+// }
+
+// t_token *fill_tokens(char *str,t_token **head)
+// {
+// 	t_token *head;
+// 	int i =0;
+// 	int token_length =0;
+// 	int _=0;
+// 	while (str[i])
+// 	{
+// 		token_length = 0;
+// 		while (str[i] != '\0' && !ft_is_operator(str[i]))
+// 		{
+// 			token_length++;
+// 			i++;
+// 		}
+// 		if(!head)
+// 			head = create_token(ft_substr(str, i - token_length, token_length),NULL);
+// 		// head->next = create_token(ft_substr(str, i - token_length, token_length),NULL);
+// 		// tokens[position++] = ft_substr(str, i, ft_is_operator(str[i]));
+// 		if (!str[i])
+// 			break;
+// 		i++;
+// 	}
+// 	return head;
+// }
+
+void ft_free_tokens(t_token *head)
+{
+	t_token *tmp;
+	while (head)
+	{
+		tmp = head;
+		head = head->next;
+		free(tmp);
+	}
+}
+int token_counter(char *str)
+{
+	int i = 0;
+	int j = 0;
+	char *store;
+	int token_count;
+
+	token_count = 1;
+	if (!str)
+		return 0;
+	if (ft_is_operator(&str[i]))
+		token_count = 0;
+	while (str[i])
+	{
+		if (ft_is_operator(&str[i]))
+		{
+			token_count++;
+			if (str[i + 1] != '\0' && !ft_is_operator(&str[i + 1]))
+				token_count++;
+			if (str[i + 1] != '\0' && ft_is_operator(&str[i + 1]))
+				i++;
+		}
+		i++;
+	}
+	return token_count;
+}
+
+
+// void initialize_token_v1(t_token **head, char *str)
+// {
+// 	int i = 0;
+// 	int position = 0;
+// 	*head = NULL;
+// 	if (!str)
+// 		return;
+// 	if (ft_is_operator(&str[0]))
+// 	{
+// 		*head = create_token(ft_substr(str, i, ft_is_operator(str)), token_identifier(str));
+// 		i += ft_is_operator(&str[0]);
+// 		position = i;
+// 	}
+// 	while (str[i])
+// 	{
+// 		while (str[i] != '\0' && !ft_is_operator(&str[i]))
+// 			i++;
+// 		link_token(head, create_token(ft_substr(str, position, i - position), \
+// 		token_identifier(&str[position])));
+// 		if(!str[i] || ft_str_isspace(&str[i]))
+// 			break;
+// 		link_token(head, create_token(ft_substr(str, i, ft_is_operator(&str[i])), token_identifier(&str[i])));
+// 		i += ft_is_operator(&str[i]);
+// 		position = i;
+// 		i++;
+// 	}
+// }
+// void initialize_token_v2(t_token **head, char *str)
+// {
+// 	int i = 0;
+// 	int position = 0;
+// 	*head = NULL;
+// 	if (!str)
+// 		return;
+// 	if (ft_is_operator(&str[0]))
+// 	{
+// 		*head = create_token(ft_substr(str, i, ft_is_operator(str)), token_identifier(str));
+// 		i += ft_is_operator(&str[0]);
+// 		position = i;
+// 	}
+// 	while (str[i])
+// 	{
+// 		i = token_trimmer(head,str[i],i);
+// 		if(!str[i] || ft_str_isspace(&str[i]))
+// 			break;
+// 		link_token(head, create_token(ft_substr(str, i, ft_is_operator(&str[i])), token_identifier(&str[i])));
+// 		i += ft_is_operator(&str[i]);
+// 		i++;
+// 	}
+// }
+
+
+int token_trimmer(t_token **head, char *str, int i)
+{	int position = i;
+	while (str[i] != '\0' && !ft_is_operator(&str[i]))
+		i++;
+	link_token(head, create_token(ft_substr(str, position, i - position), \
+	token_identifier(&str[position])));
+	return i;
+}
+void token_trimmer(t_token **head)
+{
+
+}
+int main(void)
+{
+	t_token *head;
+	char *str = "hellllllo |  grep i >>  echo  || << FF hello' ";
+	// int count = token_counter(str);
+	initialize_token(&head, str);
+	while (head)
+	{
+		printf(GRN "{%s}", head->value);
+		head = head->next;
+	}
+	return 0;
+}
