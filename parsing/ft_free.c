@@ -1,0 +1,115 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yrhandou <yrhandou@student.1337.ma>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/13 10:08:57 by yrhandou          #+#    #+#             */
+/*   Updated: 2025/07/27 09:10:32 by yrhandou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../launchpad.h"
+
+void	free_redirs(t_redir **redirs)
+{
+	t_redir	*next;
+	t_redir	*tmp;
+
+	if (!redirs || !*redirs)
+		return ;
+	tmp = *redirs;
+	while (tmp)
+	{
+		next = tmp->next;
+		if (tmp->file)
+			free(tmp->file);
+		tmp->file = NULL;
+		free(tmp);
+		tmp = next;
+	}
+	(*redirs) = NULL;
+}
+
+void	free_cmd(char **cmd)
+{
+	int	i;
+
+	if (!cmd)
+		return ;
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i])
+			free(cmd[i]);
+		cmd[i] = NULL;
+		i++;
+	}
+	free(cmd);
+}
+
+void	free_tree(t_tree **ast)
+{
+	if (!(*ast) || !ast)
+		return ;
+	free_redirs(&(*ast)->redirs);
+	free_cmd((*ast)->cmd);
+	if ((*ast)->left)
+		free_tree(&(*ast)->left);
+	if ((*ast)->right)
+		free_tree(&(*ast)->right);
+	free((*ast));
+	(*ast) = NULL;
+}
+
+void	free_tokens(t_token **head)
+{
+	t_token	*current;
+	t_token	*next;
+
+	if (!head || !*head)
+		return ;
+	current = *head;
+	while (current)
+	{
+		next = current->next;
+		if (current->value)
+		{
+			free(current->value);
+			current->value = NULL;
+		}
+		current->type = 0;
+		current->position = -1;
+		current->next = NULL;
+		current->prev = NULL;
+		free(current);
+		current = next;
+	}
+	*head = NULL;
+}
+
+void	free_keys(t_var **head)
+{
+	t_var	*current;
+	t_var	*next;
+
+	if (!head || !*head)
+		return ;
+	current = *head;
+	while (current)
+	{
+		next = current->next;
+		if (current->key)
+			free(current->key);
+		if (current->value)
+			free(current->value);
+		current->expandable = 0;
+		current->value_len = 0;
+		current->key_len = 0;
+		current->next = NULL;
+		free(current);
+		current = next;
+	}
+	*head = NULL;
+}
